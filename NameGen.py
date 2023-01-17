@@ -5,96 +5,6 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
-
-
-
-
-# e = open("endings.csv", "r")
-
-
-
-# e = e.read().split(",")
-# print(e)
-
-
-
-
-#       TRAINING DATA
-# df = pd.read_csv("Base.csv")
-
-# train, test = train_test_split(df, test_size=0.2, random_state=42)
-
-
-
-# trainX, trainY = train["Names"], train["Ratings"]
-# testX, testY = test["Names"], test["Ratings"]
-
-
-
-# tfidf = TfidfVectorizer(stop_words="english")
-# trainXVector = tfidf.fit_transform(trainX)
-# testXVector = tfidf.transform(testX)
-
-
-
-# #           SVC MODEL
-# from sklearn.svm import SVC
-# svc = SVC(kernel="linear")
-# svc.fit(trainXVector, trainY)
-
-
-##          NAIVE BAYES
-# from sklearn.naive_bayes import GaussianNB
-# gnb = GaussianNB()
-# gnb.fit(trainXVector.toarray(), trainY)
-
-# #        logistic REGRESSION
-# from sklearn.linear_model import LogisticRegression
-# log_reg = LogisticRegression()
-# log_reg.fit(trainXVector, trainY)
-
-# #       DECISION TREE
-# from sklearn.tree import DecisionTreeClassifier
-# dec_tree = DecisionTreeClassifier()
-# dec_tree.fit(trainXVector, trainY)
-
-
-
-
-
-# #       SCORING 
-# print(svc.score(trainXVector, trainY))
-# print(dec_tree.score(trainXVector, trainY))
-# print(gnb.score(trainXVector.toarray(), trainY))
-# print(log_reg.score(trainXVector, trainY))
-
-
-
-# # F1 SCORE
-# from sklearn.metrics import f1_score
-# print(f1_score(testY, svc.predict(testXVector), labels=[0,1], average=None))
-
-
-
-# #       PREDICTION
-# print(svc.predict(tfidf.transform(["Aarav"])))
-# print("THIS IS DADS NAME BELOW")
-# print(svc.predict(tfidf.transform(["Amakey"])))
-# predict = svc.predict(testXVector)
-# print(predict)
-# print(testX)
-
-# goodNames = []
-
-
-# for i in range(len(predict)):
-#     if predict[i] == 1:
-#         goodNames.append(testX.iloc[i])
-
-
-# for i in goodNames:
-#     print(i)
     
     
 
@@ -104,42 +14,92 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
 
-# a list of 26x12 of probabilities
-probOfLettersAsNameGoesOn = [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+# a list of 26x12 of probabilities for every letter in a a spot in an 8 letter name
+probOfLettersAsNameGoesOn = [ [0] * 26] * 12
+for i in probOfLettersAsNameGoesOn:
+    print(i)
+#letter pair chart
 
 
 
-def generateData():
-    #reading in data
-    f = open("justTheNames.csv", "r")
-    fi = f.read().split("\n")
-    #COUNTING OF LETTERS AS THEY GO ATTEMPT 3.0 WITH SPENCERS HELP 
-    #SUCCESS
+#list of 4x325 of probabilities for each letter pair in a 8 letter name
+letterPairProb = [[0] * 325] * 4
+
+
+#reading in data
+f = open("Data/justTheNames.csv", "r")
+fi = f.read().split("\n")
+
+
+
+def generateData():   
+    #calculating probabilities
     for nameIndex in range(len(fi)):
         for slotNum in range(len(fi[nameIndex])):
             char = fi[nameIndex][slotNum]
-            probOfLettersAsNameGoesOn[slotNum][alphabet.index(char)] += 1         
+            probOfLettersAsNameGoesOn[slotNum][alphabet.index(char)] += 1    
+        print("Generating Data: " + str(round(nameIndex / len(fi) * 100, 2)) + "%", end="\r")
+    print("Generating Data: 100%")
 
+    
+
+    #normalizing probabilities
     for slotnum in range(len(probOfLettersAsNameGoesOn)):
         for letter in range(len(probOfLettersAsNameGoesOn[slotnum])):
             probOfLettersAsNameGoesOn[slotnum][letter] = probOfLettersAsNameGoesOn[slotnum][letter] / sum(probOfLettersAsNameGoesOn[slotnum]) * 100
+        print("Normalizing Data: " + str(round(slotnum / len(probOfLettersAsNameGoesOn) * 100, 2)) + "%", end="\r")
+    print("Normalizing Data: 100%")
+    print("Data Generated")
+    
+# generateData()
+
+
+# dataframes pairs of letters
+def letterPairs():
+    df = pd.DataFrame()
+    data = []
+    num = []
+    
+    for j in range(len(fi)):
+        for i in range(len(fi[j])-1):
+            #get the two chars next to each other
+            char = fi[j][i] + fi[j][i+1]
+            data.append(char)
+            num.append(i)
+        print("Generating Data: " + str(round(j / len(fi) * 100, 2)) + "%", end="\r")
+    print("Generating Data: 100%")
+    zero = [0] * len(data)
+    df = pd.DataFrame([num, zero, zero, zero,zero,zero], columns=[data])
+    sort = df.columns.values
+    sort = sort.sort()
+    print(sort)
+    df = pd.DataFrame([num, zero, zero, zero,zero,zero], columns=[sort])
+    print(df.head(5))
+    
+    
+    
+    
+    # for index, rows in df.iterrows():
+    #     #count the number of times the letter pair appears in the dataframe
+    #     count = df[df.columns(index)].str.count([df.columns(index)])
+    #     print(count)
+    #     df.at[index, "Count"] += count[index]
+    # #Copy the finished data to a new dataframe
+    # finished = df.groupby(by="Letter Pair")["Count"].sum()
+    # print(finished.head(5))
+    
 
 
 
-final = ""
+letterPairs()
+
+
+
+
+
 def GenerateName(amount):
     global rFinal
+    #for each name to be generated run this loop
     for slotnum in range(amount):
         final = r.choices(alphabet, weights=probOfLettersAsNameGoesOn[0], k=1)
         final += r.choices(alphabet, weights=probOfLettersAsNameGoesOn[1],k=1)
@@ -150,6 +110,7 @@ def GenerateName(amount):
         final += r.choices(alphabet, weights=probOfLettersAsNameGoesOn[6],k=1)
         final += r.choices(alphabet, weights=probOfLettersAsNameGoesOn[7],k=1)
         rFinal = ""
+        #take the list elements and add them to a string
         for i in final:
             rFinal += i
         print(rFinal)
@@ -165,44 +126,34 @@ def GenerateName(amount):
 
 def main():
     global rFinal
+    #generate the data for name generation
     generateData()
-    f = open("Base.csv", "a")
+    
+    #while user dosent want to exit
     while True:
+        
+        #how many names to generate
         amount = int(input("How many names do you want?(0 to exit):"))
+        #if its zero exit
         if amount == 0:
             break
+        
         GenerateName(amount)
+        
+        #decision tree for writing to file
         yesNo = input("Do you like these names? Y/N if you dont have an opinion press enter...").lower()
         if yesNo == "y" or yesNo == "yes":
-            f.write(rFinal + "," + "1" + "," + "\n")
+            data.write(rFinal + "," + "1" + "," + "\n")
         elif yesNo == "n" or yesNo == "no":
-            f.write(rFinal + "," + "0" + ","+ "\n")
+            data.write(rFinal + "," + "0" + ","+ "\n")
         else:
             pass
     f.close()
 
 
-main()
+# main()
 
 
 
 
         
-
-
-# #       PREDICTING NAMES
-# amount = int(input("How many names do you want?:"))
-# length = int(input("How long do you want the names to be?:"))
-
-# nameCount = 0
-# finalName = ""
-# while nameCount < amount:
-
-#     svc.predict(tfidf.transform([finalName]))
-#     print(svc.predict(tfidf.transform([finalName])))
-#     print(finalName)
-#     if svc.predict(tfidf.transform([finalName])) == 1:
-#         print(finalName)
-#         nameCount += 1
-
-

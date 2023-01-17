@@ -16,14 +16,14 @@ alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"
 
 # a list of 26x12 of probabilities for every letter in a a spot in an 8 letter name
 probOfLettersAsNameGoesOn = [ [0] * 26] * 12
-for i in probOfLettersAsNameGoesOn:
-    print(i)
 #letter pair chart
 
 
 
-#list of 4x325 of probabilities for each letter pair in a 8 letter name
-letterPairProb = [[0] * 325] * 4
+#list of 4x325 of probabilities for each letter pair in a 8 letter name, Currently not used, using a pandas Dataframe instead
+letterPairIndex = []
+letterPairss = []
+# probOfLetterPairs = [[0] * 325] * 4
 
 
 #reading in data
@@ -49,33 +49,40 @@ def generateData():
             probOfLettersAsNameGoesOn[slotnum][letter] = probOfLettersAsNameGoesOn[slotnum][letter] / sum(probOfLettersAsNameGoesOn[slotnum]) * 100
         print("Normalizing Data: " + str(round(slotnum / len(probOfLettersAsNameGoesOn) * 100, 2)) + "%", end="\r")
     print("Normalizing Data: 100%")
-    print("Data Generated")
     
 # generateData()
 
-
-# dataframes pairs of letters
-def letterPairs():
-    df = pd.DataFrame()
-    data = []
-    num = []
-    
+#list of all the letter pairs and their index in the name
+def letterPairs():    
+    global letterPairss, letterPairIndex
+    print(letterPairIndex)
     for j in range(len(fi)):
         for i in range(len(fi[j])-1):
             #get the two chars next to each other
-            char = fi[j][i] + fi[j][i+1]
-            data.append(char)
-            num.append(i)
+            letterPairss.append(fi[j][i] + fi[j][i+1])
+            letterPairIndex.append(i)
         print("Generating Data: " + str(round(j / len(fi) * 100, 2)) + "%", end="\r")
     print("Generating Data: 100%")
-    zero = [0] * len(data)
-    df = pd.DataFrame([num, zero, zero, zero,zero,zero], columns=[data])
-    sort = df.columns.values
-    sort = sort.sort()
-    print(sort)
-    df = pd.DataFrame([num, zero, zero, zero,zero,zero], columns=[sort])
-    print(df.head(5))
     
+
+    letterPairss, letterPairIndex = zip(*sorted(zip(letterPairss, letterPairIndex)))
+    df = pd.DataFrame({"Letter Pair": letterPairss, "Index": letterPairIndex})
+    print(df.head(5))
+    for i in range(11):
+        df.insert(0,i,0)
+    for i,r in df.iterrows():
+        df.at[i, r["Index"]] += 1
+    print(df)
+
+
+
+    
+
+    
+
+
+
+
     
     
     

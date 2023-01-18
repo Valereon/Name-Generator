@@ -2,12 +2,6 @@ import random as r
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-    
-    
-
 
 
 #                                                  GENERATING NAMES
@@ -68,10 +62,25 @@ def letterPairs():
     letterPairss, letterPairIndex = zip(*sorted(zip(letterPairss, letterPairIndex)))
     df = pd.DataFrame({"Letter Pair": letterPairss, "Index": letterPairIndex})
     print(df.head(5))
+    z = 0
+    finalList = []
+    finalListNum = []
     for i in range(11):
         df.insert(0,i,0)
-    for i,r in df.iterrows():
+    for i,r in enumerate(df):
         df.at[i, r["Index"]] += 1
+        if df.at[i, r["Letter Pair"]] == df.at[i + 1, r["Letter Pair"]]:
+            finalList.append(r["Letter Pair"])
+            z = i
+            while df.at[z, r["Letter Pair"]] == df.at[z + 1, r["Letter Pair"]]:
+                df.at[z, r[z]] += 1
+                z += 1
+                if i == len(df) - 1:
+                    break
+            finalListNum.append(df.at[i, r[i]])
+    finalList, finalListNum = zip(*sorted(zip(finalList, finalListNum)))
+    df = pd.DataFrame({"Letter Pair": finalList, "Index": finalListNum})
+            
     print(df)
 
 
@@ -82,19 +91,6 @@ def letterPairs():
 
 
 
-
-    
-    
-    
-    # for index, rows in df.iterrows():
-    #     #count the number of times the letter pair appears in the dataframe
-    #     count = df[df.columns(index)].str.count([df.columns(index)])
-    #     print(count)
-    #     df.at[index, "Count"] += count[index]
-    # #Copy the finished data to a new dataframe
-    # finished = df.groupby(by="Letter Pair")["Count"].sum()
-    # print(finished.head(5))
-    
 
 
 
@@ -146,17 +142,6 @@ def main():
             break
         
         GenerateName(amount)
-        
-        #decision tree for writing to file
-        yesNo = input("Do you like these names? Y/N if you dont have an opinion press enter...").lower()
-        if yesNo == "y" or yesNo == "yes":
-            data.write(rFinal + "," + "1" + "," + "\n")
-        elif yesNo == "n" or yesNo == "no":
-            data.write(rFinal + "," + "0" + ","+ "\n")
-        else:
-            pass
-    f.close()
-
 
 # main()
 

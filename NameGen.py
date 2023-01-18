@@ -65,19 +65,31 @@ def letterPairs():
     z = 0
     finalList = []
     finalListNum = []
-    for i in range(11):
+    for i in range(25):
         df.insert(0,i,0)
-    for i,r in enumerate(df):
+    print(df.head(15))
+    for i,r in df.iterrows():
         df.at[i, r["Index"]] += 1
-        if df.at[i, r["Letter Pair"]] == df.at[i + 1, r["Letter Pair"]]:
-            finalList.append(r["Letter Pair"])
-            z = i
-            while df.at[z, r["Letter Pair"]] == df.at[z + 1, r["Letter Pair"]]:
-                df.at[z, r[z]] += 1
-                z += 1
-                if i == len(df) - 1:
-                    break
-            finalListNum.append(df.at[i, r[i]])
+        if i == len(df) - 1:
+            break
+        z = i
+        if df.loc[z, "Letter Pair"] == df.loc[z + 1, "Letter Pair"]:
+            if df.loc[z,"Index"] == df.loc[z + 1, "Index"]:
+                print("reached")
+                finalList.append(df.loc[i, "Letter Pair"])
+                print(finalList)
+                z = i
+                while df.loc[z,"Index"] == df.loc[z + 1,"Index"]:
+                    if df.loc[z, "Letter Pair"] == df.loc[z + 1, "Letter Pair"]:
+                        df.loc[z, r[z]] += 1
+                        z += 1
+                        if i == len(df) - 1:
+                            print("break")
+                            break
+                    finalListNum.append(df.loc[i, r[i]])
+    print(df)
+    print(finalList)
+    print(finalListNum)
     finalList, finalListNum = zip(*sorted(zip(finalList, finalListNum)))
     df = pd.DataFrame({"Letter Pair": finalList, "Index": finalListNum})
             

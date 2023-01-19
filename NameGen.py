@@ -60,29 +60,47 @@ def letterPairs():
     
 
     letterPairss, letterPairIndex = zip(*sorted(zip(letterPairss, letterPairIndex)))
-    
-    
+
+
     finalList = []
-    finalListNum = [[0] * len(letterPairss)] * 15
-    print(finalListNum)
-    
+    finalListNum = [[0] * len(letterPairss)] * max(letterPairIndex) 
+    # for letterP in range(len(letterPairss)):
+    #     if letterP == len(letterPairss) - 1 :
+    #             break
+    #     for slot in range(len(finalListNum)):
+    #         if letterP == len(letterPairss) - 1:
+    #             break
+    #         if letterPairss[letterP] == letterPairss[letterP + 1]:
+    #             if letterPairIndex.count(letterPairIndex[letterP]) > 1:
+    #                 finalList.append(letterPairss[letterP])
+    #             if letterPairIndex[letterP] == letterPairIndex[letterP + 1]:
+    #                 print(letterP)
+    #                 print(slot)
+    #                 try:
+    #                     finalListNum[letterP][slot] += 1
+    #                 except IndexError:
+    #                     print("IndexError")
+    #                 
+    # 
+    # 
+                #   USE THIS           
     for letterP in range(len(letterPairss)):
-        if letterP == len(letterPairss) - 1 :
+        for slot in range(len(letterPairIndex)):
+            if letterP == len(letterPairss):
                 break
-        for slot in range(len(finalListNum)):
-            if letterP == len(letterPairss) - 1:
-                break
+            if finalList.count(letterPairIndex[letterP]) == 0:
+                finalList.append(letterPairss[letterP])
+                char = letterPairss[letterP]
+            else:
+                char = letterPairss[letterP]
             if letterPairss[letterP] == letterPairss[letterP + 1]:
-                if letterPairIndex.count(letterPairIndex[letterP]) > 1:
-                    finalList.append(letterPairss[letterP])
                 if letterPairIndex[letterP] == letterPairIndex[letterP + 1]:
-                    print(letterP)
-                    print(slot)
-                    try:
-                        finalListNum[letterP][slot] += 1
-                    except IndexError:
-                        print("IndexError")
-             
+                    print(str(letterP )+ " letterP")
+                    print(str(slot) + " slot")
+                    finalListNum[letterP][finalList.index(char)] += 1
+
+    # print(finalListNum)
+
              
              
              
@@ -92,9 +110,6 @@ def letterPairs():
             #         finalListNum[letterP][slot] += 1
                     
            
-           
-    print(finalListNum)
-    print(letterPairss) 
 
     
     
@@ -131,11 +146,11 @@ def letterPairs():
     #                     break
     #                 finalListNum.append(df.loc[i, r[i]])
 
-    print(finalList)
-    print(finalListNum)
-    finalList, finalListNum = zip(*sorted(zip(finalList, finalListNum)))
-    print(finalList)
-    print(finalListNum)
+    # print(finalList)
+    # print(finalListNum)
+    # finalList, finalListNum = zip(*sorted(zip(finalList, finalListNum)))
+    # print(finalList)
+    # print(finalListNum)
 
             
     

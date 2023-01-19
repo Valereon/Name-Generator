@@ -61,9 +61,32 @@ def letterPairs():
 
     letterPairss, letterPairIndex = zip(*sorted(zip(letterPairss, letterPairIndex)))
 
+    removed = list(set(letterPairss))
+    removed.sort()
+
 
     finalList = []
-    finalListNum = [[0] * len(letterPairss)] * max(letterPairIndex) 
+    finalListNum = [[0] * len(removed)] * max(letterPairIndex)
+
+
+    for pair in letterPairss:
+        if finalList.count(pair) == 0:
+            finalList.append(pair)
+        for i in range(len(finalList)):
+            if pair == finalList[i]:
+                finalListNum[letterPairIndex[letterPairss.index(pair)]][i] += 1
+
+    print(finalList)
+    print(finalListNum)
+
+        
+
+
+
+
+
+
+    #                            Failed Attempts 1.0
     # for letterP in range(len(letterPairss)):
     #     if letterP == len(letterPairss) - 1 :
     #             break
@@ -83,22 +106,17 @@ def letterPairs():
     #                 
     # 
     # 
-                #   USE THIS           
-    for letterP in range(len(letterPairss)):
-        for slot in range(len(letterPairIndex)):
-            if letterP == len(letterPairss):
-                break
-            if finalList.count(letterPairIndex[letterP]) == 0:
-                finalList.append(letterPairss[letterP])
-                char = letterPairss[letterP]
-            else:
-                char = letterPairss[letterP]
-            if letterPairss[letterP] == letterPairss[letterP + 1]:
-                if letterPairIndex[letterP] == letterPairIndex[letterP + 1]:
-                    print(str(letterP )+ " letterP")
-                    print(str(slot) + " slot")
-                    finalListNum[letterP][finalList.index(char)] += 1
-
+                #   Another Failed Attempt 2.0
+    # for letterP in range(len(letterPairss)):
+    #     for slot in range(len(letterPairIndex)):
+    #         if letterP == len(letterPairss):
+    #             break
+    #         if finalList.count(letterPairIndex[letterP]) == 0:
+    #             finalList.append(letterPairss[letterP])
+    #         char = letterPairss[letterP]
+    #         if letterPairss[letterP] == letterPairss[letterP + 1]:
+    #             if letterPairIndex[letterP] == letterPairIndex[letterP + 1]:
+    #                 finalListNum[letterP][finalList.index(char)] += 1
     # print(finalListNum)
 
              
@@ -114,7 +132,7 @@ def letterPairs():
     
     
     
-    
+                            # Failed Attempt 3.0 using dataframes
     # going away from the pandas dataframe method, it was too complicated
     # df = pd.DataFrame({"Letter Pair": letterPairss, "Index": letterPairIndex})
     # print(df.head(5))
